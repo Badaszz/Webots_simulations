@@ -1,0 +1,66 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/robots/gctronic/e-puck/protos/E-puck.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/robots/gctronic/e-puck/protos/E-puckGroundSensors.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/drinks/protos/BeerBottle.proto"
+
+WorldInfo {
+}
+Viewpoint {
+  orientation -0.16740343960312346 0.01730222027916063 0.9857366390585544 3.1506553389360357
+  position 1.0018864495709527 0.010822525434699998 0.36750248857650847
+  follow "e-puck"
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+RectangleArena {
+  translation -4.07842e-07 0.4 0
+  rotation 0 0 1 -1.5707953071795862
+  floorSize 1.2 1.8
+  floorTileSize 1.2 1.8
+  floorAppearance PBRAppearance {
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/robots/gctronic/e-puck/worlds/textures/oval_line.png"
+      ]
+    }
+    roughness 1
+    metalness 0
+  }
+}
+BeerBottle {
+  translation -4.96401e-07 -0.02 0.000343045
+  rotation 0.09679231787532404 -0.4795425583030423 -0.8721640797329913 2.5663170522552685e-06
+  name "beer bottle(1)"
+}
+BeerBottle {
+  translation -0.41 -0.02 0.000342545
+  rotation 0.09679231787532404 -0.4795425583030423 -0.8721640797329913 2.5663170522552685e-06
+  name "beer bottle(2)"
+}
+BeerBottle {
+  translation -0.77 0.52 0.000342225
+  rotation 0.09679231787532404 -0.4795425583030423 -0.8721640797329913 2.5663170522552685e-06
+  name "beer bottle(3)"
+}
+DEF E_PUCK E-puck {
+  translation 0.255384 -0.0259515 -0.000151159
+  rotation 6.183319983312184e-05 -3.967799989291527e-05 0.999999997301156 3.04775
+  controller "line_following_with_obstacle_avoidance"
+  window "botstudio"
+  camera_width 40
+  camera_height 1
+  groundSensorsSlot [
+    E-puckGroundSensors {
+    }
+  ]
+}
+BeerBottle {
+  translation 2.8456878532481394e-18 0.84 0.0003427019934575254
+  rotation 0.6215069831921421 -0.776959021800945 0.10031823505983832 9.134844463550061e-17
+}
