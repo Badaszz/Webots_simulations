@@ -28,7 +28,7 @@ A Webots simulation of an e-puck robot that performs **line following with obsta
 1. Open Webots
 2. Go to **File → Open World** and select `e-puck_botstudio_with_floor_sensors.wbt`
 3. The world will load with the e-puck robot on a line-following track
-4. Webots will automatically run `localization_with_Kalman_filter.py` as the robot controller
+4. Pick`localization_with_Kalman_filter.py` as the robot controller
 5. Press the **Play** button in Webots to start the simulation
 6. Pose estimates are printed to the Webots console every timestep:
 
@@ -76,17 +76,17 @@ state = [x, y, φ]
 ### Sensor Pipeline
 
 ```
-Wheel Encoders  →  get_wheels_speed()  →  get_robot_speeds()
+Wheel Encoders  →  get_wheels_speed()    →     get_robot_speeds()
+                                                        ↓
+                                              u (linear velocity)
+                                              w (angular velocity)
                                                   ↓
-                                        u (linear velocity)
-                                        w (angular velocity)
-                                                  ↓
-Gyroscope  →  integrate wz × dt  →  gyro_phi    →    Kf_step()  →  [x, y, φ, P]
+Gyroscope  →  integrate wz × dt  →  gyro_phi    → Kf_step()  →  [x, y, φ, P]
 ```
 
 1. **Wheel encoders** — left and right encoder ticks are read each step. The difference from the previous step is converted to wheel linear speeds, then to robot body linear (`u`) and angular (`w`) velocity
 2. **Gyroscope** — the raw yaw rate `wz` (rad/s) from the gyro's Z axis is integrated independently over time to produce `gyro_phi`, a continuous heading estimate
-3. **EKF** — `u`, `w`, and `gyro_phi` are fed into `Kf_step()` every timestep. Odometry drives the prediction step; the gyro heading drives the measurement update
+3. **EKF** — `u`, `w`, and `gyro_phi` (along with the previous position estimates) are fed into `Kf_step()` every timestep. Odometry drives the prediction step; the gyro heading drives the measurement update
 
 ---
 
@@ -105,7 +105,7 @@ x̂⁻  = x + u·dt·cos(φ + ω·dt/2)       # state prediction
 ŷ⁻  = y + u·dt·sin(φ + ω·dt/2)
 φ̂⁻  = φ + ω·dt
 
-P⁻  = J · P · Jᵀ + Q                  # covariance prediction (uncertainty grows)
+P⁻  = J · P · Jᵀ + Q                  # covariance prediction
 ```
 
 **Update phase:**
@@ -115,7 +115,7 @@ innovation = wrap(gyro_phi − φ̂⁻)      # how surprised were we by the gyro
 S  = H · P⁻ · Hᵀ + R                  # innovation covariance
 K  = P⁻ · Hᵀ / S                      # Kalman Gain
 x̂  = x̂⁻ + K · innovation             # corrected state
-P  = (I − K·H) · P⁻                   # shrink uncertainty
+P  = (I − K·H) · P⁻                   # shrink uncertainty (update our uncertainty based on innovation and kalman gain)
 ```
 
 The measurement matrix `H = [[0, 0, 1]]` picks out only `φ` from the state vector, because the gyroscope measures heading only — not position.
@@ -170,15 +170,6 @@ Q = np.diag([1e-4, 1e-4, 1e-5])
 ```
 
 The phi component (`1e-5`) is set slightly lower than x and y because heading error is the most damaging (position errors compound when heading is wrong), so we want the filter to lean on the gyro for heading correction rather than trusting the odometry angular rate.
-
-**Tuning rules used:**
-
-| Observation | Adjustment |
-|---|---|
-| phi drifting slowly despite gyro | Increase `Q[2,2]` to raise K for phi |
-| x/y jittering unrealistically | Decrease `Q[0,0]` and `Q[1,1]` |
-| Estimate lags during sharp turns | Increase `Q[2,2]` |
-| phi exploding after long runs | Check wrap_angle is applied to innovation and output phi |
 
 ### P — Initial Covariance
 
