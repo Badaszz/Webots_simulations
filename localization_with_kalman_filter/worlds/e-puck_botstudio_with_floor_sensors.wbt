@@ -1,0 +1,66 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/robots/gctronic/e-puck/protos/E-puck.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/robots/gctronic/e-puck/protos/E-puckGroundSensors.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/drinks/protos/BeerBottle.proto"
+
+WorldInfo {
+}
+Viewpoint {
+  orientation -0.19478354702382306 0.013526004923937643 0.980752984700845 3.1883818838366365
+  position 0.5700340026586425 0.024317059491820846 0.7260387496714261
+  follow "e-puck"
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+RectangleArena {
+  translation -4.07842e-07 0.4 0
+  rotation 0 0 1 -1.5707953071795862
+  floorSize 1.2 1.8
+  floorTileSize 1.2 1.8
+  floorAppearance PBRAppearance {
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/robots/gctronic/e-puck/worlds/textures/oval_line.png"
+      ]
+    }
+    roughness 1
+    metalness 0
+  }
+}
+BeerBottle {
+  translation -1.3299567759323211e-05 -0.020003116483033864 0.00034314725693711245
+  rotation 3.897487971826199e-08 -8.809520954963977e-08 0.9999999999999953 4.124501896143435e-06
+  name "beer bottle(1)"
+}
+DEF E_PUCK E-puck {
+  hidden position_0_0 606.3347992733825
+  hidden position_0_1 506.7881029639347
+  hidden linearVelocity_0 -0.10414364755012485 0.06994405017695314 2.61410714048987e-05
+  hidden angularVelocity_0 -0.003014026914790617 0.001219356236124064 0.011492291647383978
+  hidden rotation_1 0 0.9999999999999999 0 3.149009784142185
+  hidden linearVelocity_1 -0.1042385122319135 0.07008715672977457 -6.961501648752306e-05
+  hidden angularVelocity_1 -3.5038551749903295 -5.212435164299467 -0.009783667509548535
+  hidden rotation_2 0 1 0 4.133278389567787
+  hidden linearVelocity_2 -0.10422054382359938 0.06995466459334965 -1.0715718171594425e-05
+  hidden angularVelocity_2 -3.5066180842063535 -5.210586070713505 -0.005223432333776964
+  translation -0.6306751625039264 0.0618211937369728 -7.678606661101241e-05
+  rotation -0.00023894615525838785 -0.0008397468417583396 0.9999996188649156 2.5497374934450185
+  controller "localization_with_Kalman_filter"
+  window "botstudio"
+  camera_width 40
+  camera_height 1
+  groundSensorsSlot [
+    E-puckGroundSensors {
+    }
+  ]
+}
+BeerBottle {
+  translation 8.183963655301829e-06 0.8400017140822171 0.00034314725693711245
+  rotation -2.2855829995070568e-08 5.960799327623061e-08 0.999999999999998 5.003261034389349e-06
+}
