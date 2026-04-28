@@ -9,8 +9,9 @@ A Webots simulation of an e-puck robot that performs **line following with obsta
 ```
 .
 ├── e-puck_botstudio_with_floor_sensors.wbt   # Webots world file
-└── localization_with_Kalman_filter.py        # Robot controller 
-└── simple_localization_with_odometry_only.py # Another robot controller, with only odometry
+├── localization_with_Kalman_filter.py        # Robot controller (odometry + gyro)
+├── simple_localization_with_odometry_only.py # Robot controller with only odometry
+└── ekf_multiple_sensors.py                   # Robot controller (odometry + gyro + compass + GPS)
 ```
 
 ---
@@ -56,6 +57,20 @@ The robot runs a **finite state machine** for navigation with the following stat
 | `right_turn2` | Sharp right turn to re-align with the line |
 
 Navigation is a secondary concern in this project. **The primary focus is localization** — estimating the robot's `(x, y, φ)` pose in the world frame throughout the entire run using the EKF running in the background every single timestep.
+
+---
+
+## Sensor Fusion Progress
+
+**Initial Approach (odometry + gyro only):** The first localization implementation (`localization_with_Kalman_filter.py`) relied solely on wheel odometry and gyroscope measurements. While this approach worked, it suffered from significant drift and instability over time. Odometry accumulated errors as the robot moved, and despite gyroscope integration for heading, the position estimates became increasingly unreliable.
+
+**Improved Approach (odometry + gyro + compass + GPS):** The enhanced version (`ekf_multiple_sensors.py`) fuses four sensors into the Extended Kalman Filter:
+- **Wheel Encoders & Odometry** — provide motion predictions (prediction step)
+- **Gyroscope** — helps estimate heading changes
+- **Compass** — provides absolute heading measurements (measurement update)
+- **GPS** — provides absolute position measurements (measurement update)
+
+By incorporating GPS and compass as measurement updates in the filter, the localization became **near-perfect**, effectively eliminating drift and providing stable, accurate pose estimates throughout the entire run. The compass anchors the heading to true north, while GPS anchors the position to the world frame, allowing the filter to correct odometry drift in real-time.
 
 ---
 
