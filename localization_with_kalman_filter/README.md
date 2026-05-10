@@ -10,8 +10,11 @@ A Webots simulation of an e-puck robot that performs **line following with obsta
 .
 ├── e-puck_botstudio_with_floor_sensors.wbt   # Webots world file
 ├── localization_with_Kalman_filter.py        # Robot controller (odometry + gyro)
-├── simple_localization_with_odometry_only.py # Robot controller with only odometry
-└── ekf_multiple_sensors.py                   # Robot controller (odometry + gyro + compass + GPS)
+├── simple_localization_with_odometry_only.py # Robot controller with only odometry (no EKF)
+├── ekf_multiple_sensors.py                   # Main controller (sensor loop + EKF + motor commands)
+├── ekf.py                                   # EKF logic, math, and update step
+├── odometry.py                              # Odometry helper functions (encoder → velocity → pose)
+└── line_following.py                        # Line-following / obstacle avoidance state machine
 ```
 
 ---
@@ -70,7 +73,14 @@ Navigation is a secondary concern in this project. **The primary focus is locali
 - **Compass** — provides absolute heading measurements (measurement update)
 - **GPS** — provides absolute position measurements (measurement update)
 
-By incorporating GPS and compass as measurement updates in the filter, the localization became **near-perfect**, effectively eliminating drift and providing stable, accurate pose estimates throughout the entire run. The compass anchors the heading to true north, while GPS anchors the position to the world frame, allowing the filter to correct odometry drift in real-time.
+This implementation is now modularized across separate files:
+- `ekf_multiple_sensors.py` — main controller with sensor reads, EKF calls, printed output, and motor commands
+- `ekf.py` — EKF logic, Jacobian, and measurement updates
+- `odometry.py` — encoder-to-speed conversions and dead-reckoning helpers
+- `line_following.py` — line following and obstacle avoidance state machine
+- `simple_localization_with_odometry_only.py` — a separate file demonstrating odometry-only localization without EKF
+
+By incorporating GPS and compass as measurement updates in the filter, the localization became **near-perfect**, effectively eliminating drift and providing stable, accurate pose estimates throughout the entire run. The `ekf_multiple_sensors.py` version now delivers very high accuracy even over long intervals, remaining highly stable and achieving near-perfect localization with accuracy up to **1 decimal place over a one-minute run**. The compass anchors the heading to true north, while GPS anchors the position to the world frame, allowing the filter to correct odometry drift in real-time.
 
 ---
 
